@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Weather</string>
+    <string name="data">Data: </string>
+    <string name="temp">Temperature: </string>
+    <string name="pressure">Pressure: </string>
+    <string name="humidity">Humidity: </string>
+    <string name="main"></string>
+    <string name="description">Description: </string>
+    <string name="clouds">Clouds </string>
+    <string name="wind">Wind: </string>
+</resources>
