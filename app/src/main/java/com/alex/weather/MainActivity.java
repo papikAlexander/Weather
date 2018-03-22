@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private AppDatabase db;
+    private boolean listIsEmpty = true;
 
     Retrofit retrofit;
     Flowable<WeatherModelWeb> flowable;
@@ -77,10 +78,19 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .subscribe(modelDB -> {
 
-                    Completable.fromAction(() -> db.getWeatherDao().update(modelDB))
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe();
+                    if (listIsEmpty){
+
+                        Completable.fromAction(() -> db.getWeatherDao().insert(modelDB))
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe();
+                    } else {
+
+                        Completable.fromAction(() -> db.getWeatherDao().update(modelDB))
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe();
+                    }
 
                 });
 
@@ -95,8 +105,13 @@ public class MainActivity extends AppCompatActivity {
         flowableList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
-                    mAdapter = new MyAdapter(list);
-                    mRecyclerView.setAdapter(mAdapter);
+                    if (!list.isEmpty()) {
+                        listIsEmpty = false;
+                        mAdapter = new MyAdapter(list);
+                        mRecyclerView.setAdapter(mAdapter);
+                    } else {
+                        listIsEmpty = true;
+                    }
                 });
 
     }
